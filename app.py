@@ -23,7 +23,7 @@ def carregar_cadeia():
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     
     if os.path.exists("./chroma_bimbam_v2.db"):
-     banco_vetorial = Chroma(
+        banco_vetorial = Chroma(
         embedding_function=embeddings,
         persist_directory="./chroma_bimbam_v2.db",
         collection_name="bimbam_buy"
