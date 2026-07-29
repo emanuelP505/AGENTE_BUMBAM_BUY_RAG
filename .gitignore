@@ -15,3 +15,5 @@ __pycache__/
 
 # Arquivos de sistema do VS Code
 .vscode/
+#banco vectorial
+chroma_bimbam.db/

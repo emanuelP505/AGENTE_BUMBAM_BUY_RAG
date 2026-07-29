@@ -8,3 +8,4 @@ sentence-transformers
 chromadb
 pypdf
 python-dotenv
+streamlit

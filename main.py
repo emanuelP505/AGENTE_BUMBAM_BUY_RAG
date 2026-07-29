@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader,DirectoryLoader
 from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import ChatPromptTemplate
@@ -25,25 +25,30 @@ llm=ChatGroq(
 embeddings=HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 if os.path.exists("./chroma.db"):
-    banco_vetorial=Chroma(
-    embedding_function=embeddings,
-    persist_directory="./chroma.db",
-    collection_name="documento_clinica"
-)
+    banco_vetorial = Chroma(
+              embedding_function=embeddings,
+              persist_directory="./chroma_bimbam.db",
+              collection_name="bimbam_buy"
+          )
 else:
-    leitor=PyPDFLoader("documento_clinica.pdf")
+    leitor=DirectoryLoader(
+        "./documentos",
+        glob="./*.pdf",
+        loader_cls=PyPDFLoader
+    )
+
     documento=leitor.load()
     chunk=RecursiveCharacterTextSplitter(
     chunk_size=1000,
     chunk_overlap=200
 )
     fatias=chunk.split_documents(documento)
-    banco_vetorial=Chroma.from_documents(
-        documents=fatias,
-        embedding=embeddings,
-        persist_directory="./chroma.db",
-        collection_name="documento_clinica"
-    )
+    banco_vetorial = Chroma.from_documents(
+             documents=fatias,
+             embedding=embeddings,
+             persist_directory="./chroma_bimbam.db",
+             collection_name="bimbam_buy"
+         )
 
 retriever=banco_vetorial.as_retriever(
     search_type="mmr",
@@ -52,8 +57,14 @@ retriever=banco_vetorial.as_retriever(
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
-system_prompt= """Responda à pergunta do usuário usando apenas o contexto fornecido abaixo. Se não souber a resposta no contexto, diga que não encontrou no documento.
-Contexto: \n{context}"""
+system_prompt = (
+       "Você é o assistente virtual oficial da plataforma BimBam Buy. "
+        "Responda à pergunta do usuário usando estritamente o contexto fornecido abaixo.\n"
+        "Se a informação não estiver presente no contexto, responda de forma cordial que não encontrou "
+        "as informações solicitadas nas políticas da loja.\n\n"
+        "Contexto:\n{context}"
+    )
+
 prompt=ChatPromptTemplate.from_messages(
     [
        (
@@ -76,7 +87,7 @@ CIANO = "\033[36m"
 VERMELHO = "\033[31m"
 RESET = "\033[0m"
 
-print("--- Assistente da Clínica Iniciado (digite 'sair' para encerrar) ---")
+print("--- Assistente da BumBam Buy Iniciado (digite 'sair' para encerrar) ---")
 while True:
     pergunta=input(f"\n{CIANO}Você: {RESET}")
     if pergunta.lower().strip() in ["sair","quit","exit"]:
