@@ -78,7 +78,7 @@ prompt = ChatPromptTemplate.from_messages([
 ])
 
 # Inicialização da LLM (Groq - Llama 3.3)
-llm = ChatGroq(model="llama-3.2-3b-preview", temperature=0)
+llm = ChatGroq(model="openai/gpt-oss-20b", temperature=0)
 output_parser = StrOutputParser()
 
 # Montagem da Cadeia RAG via LCEL
