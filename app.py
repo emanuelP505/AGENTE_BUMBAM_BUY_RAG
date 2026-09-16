@@ -19,6 +19,8 @@ st.caption("Tire suas dúvidas sobre entregas, pagamentos, trocas, reembolsos e 
 
 # Cache para carregar o RAG uma única vez na memória
 #@st.cache_resource
+@st.cache_resource(hash_funcs={"v": lambda _: "v2"})
+
 def carregar_cadeia():
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     
