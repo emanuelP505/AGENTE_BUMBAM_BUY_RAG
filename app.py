@@ -67,7 +67,7 @@ def carregar_cadeia():
         ("user", "{input}")
     ])
 
-    llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
+    llm = ChatGroq(model="llama-3.2-3b-preview", temperature=0)
     output_parser = StrOutputParser()
 
     return (
