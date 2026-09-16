@@ -18,7 +18,7 @@ st.title("🛒 Assistente de Suporte - BimBam Buy")
 st.caption("Tire suas dúvidas sobre entregas, pagamentos, trocas, reembolsos e afiliados.")
 
 # Cache para carregar o RAG uma única vez na memória
-@st.cache_resource
+#@st.cache_resource
 def carregar_cadeia():
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     
